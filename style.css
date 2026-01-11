@@ -1,8 +1,7 @@
-/* Diseño inspirado en la captura de pantalla */
 body {
-  background-color: #0b0b0b;
+  background-color: #0d0d0d;
   color: #ffffff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .wallet-card {
@@ -35,14 +34,4 @@ body {
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
-}
-
-.navbar-custom {
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #333;
-}
-
-.contact-item:hover {
-  background: #2575fc !important;
-  cursor: pointer;
 }
