@@ -1,69 +1,48 @@
-/* Configuración de Pantalla y Colores (Referencia Foto) */
+/* Diseño inspirado en la captura de pantalla */
 body {
-  background-color: #121212;
+  background-color: #0b0b0b;
   color: #ffffff;
-  font-family: 'Poppins', sans-serif;
-  padding-bottom: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Logo con degradado de la imagen */
-.brand-logo {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  border-radius: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 20px rgba(106, 17, 203, 0.4);
-  margin: 0 auto 15px;
-}
-
-/* Tarjeta Principal (Dashboard) */
 .wallet-card {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  background: linear-gradient(135deg, #4b1a6b 0%, #1a1a2e 100%);
   border-radius: 25px;
-  padding: 25px;
-  margin: 20px 0;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  padding: 30px;
+  border: 1px solid #8e2de2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
-/* Ítems de Transacción (Lista inferior de la foto) */
-.transaction-item {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 18px;
-  padding: 15px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.auth-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid #a133ff !important;
+  border-radius: 30px !important;
+  color: white !important;
+  padding: 12px 20px !important;
+}
+
+.btn-custom {
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  padding: 12px 25px;
   transition: 0.3s;
 }
 
-.transaction-icon {
-  width: 45px;
-  height: 45px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
-}
-
-/* Botones y Formularios */
-.btn-wallet {
-  background: #8e2de2;
-  border: none;
-  border-radius: 14px;
+.btn-custom:hover {
   color: white;
-  padding: 12px;
-  font-weight: 600;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
 }
 
-.form-control-wallet {
-  background: #1e1e1e;
-  border: 1px solid #333;
-  color: white !important;
-  border-radius: 12px;
+.navbar-custom {
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.contact-item:hover {
+  background: #2575fc !important;
+  cursor: pointer;
 }
