@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Transacciones</title>
+    <title>Historial - Alke Wallet</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
@@ -10,8 +10,11 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <nav class="navbar navbar-dark bg-dark px-4 py-3">
+      <a class="navbar-brand" href="menu.html">← Dashboard</a>
+    </nav>
     <div class="container mt-5">
-      <h2 class="mb-4">Movimientos</h2>
+      <h2 class="mb-4">Movimientos Recientes</h2>
       <div class="wallet-card">
         <table class="table table-borderless text-white">
           <thead>
@@ -24,10 +27,8 @@
           <tbody id="transactionTableBody"></tbody>
         </table>
       </div>
-      <a href="menu.html" class="btn btn-custom mt-4">Volver</a>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
