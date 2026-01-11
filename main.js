@@ -1,170 +1,130 @@
 $(document).ready(function () {
-  // ==========================================
-  // 1. ESTADO INICIAL Y PERSISTENCIA
-  // ==========================================
-
-  // Saldo inicial (si no existe, se crea con $21.050)
+  // --- 1. ESTADO Y PERSISTENCIA ---
   let saldo = parseFloat(localStorage.getItem('alke_saldo')) || 21050;
-
-  // Historial de transacciones
   let historial = JSON.parse(localStorage.getItem('alke_historial')) || [
     { fecha: '10/01/2026', desc: 'Saldo Inicial', monto: 21050, tipo: 'ingreso' },
   ];
-
-  // Agenda de Contactos (Lección 6)
   let contactos = JSON.parse(localStorage.getItem('alke_contactos')) || [
-    { nombre: 'Juan Pérez', foto: 'https://i.pravatar.cc/150?u=juan' },
-    { nombre: 'María García', foto: 'https://i.pravatar.cc/150?u=maria' },
-    { nombre: 'Pedro Soto', foto: 'https://i.pravatar.cc/150?u=pedro' },
+    {
+      nombre: 'Juan Pérez',
+      telefono: '+56912345678',
+      cbu: '0000012345678901234567',
+      foto: 'https://i.pravatar.cc/150?u=1',
+    },
   ];
 
-  // ==========================================
-  // 2. FUNCIONES DE UTILIDAD
-  // ==========================================
-
-  const actualizarVistaSaldo = () => {
-    if ($('#currentBalance').length) {
+  // --- 2. FUNCIONES GLOBALES ---
+  const actualizarInterfaz = () => {
+    if ($('#currentBalance').length)
       $('#currentBalance').text(`$ ${saldo.toLocaleString('es-CL')}`);
-    }
+    renderizarTabla();
   };
 
-  const registrarMovimiento = (descripcion, monto, tipo) => {
-    const nuevaTrans = {
-      fecha: new Date().toLocaleDateString(),
-      desc: descripcion,
-      monto: monto,
-      tipo: tipo,
-    };
-    historial.unshift(nuevaTrans); // Agregar al inicio de la lista
+  const registrarMovimiento = (desc, monto, tipo) => {
+    historial.unshift({ fecha: new Date().toLocaleDateString(), desc, monto, tipo });
     localStorage.setItem('alke_historial', JSON.stringify(historial));
     localStorage.setItem('alke_saldo', saldo);
   };
 
-  // ==========================================
-  // 3. LÓGICA DE LOGIN (VALIDACIÓN JQUERY)
-  // ==========================================
-
+  // --- 3. LOGIN (Validación Correo con jQuery) ---
   $('#loginForm').on('submit', function (e) {
     e.preventDefault();
     const email = $('#userEmail').val();
     const pass = $('#userPass').val();
+    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-    // Regex para validar formato de correo
-    const filtroEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-    if (!filtroEmail.test(email)) {
-      alert('Error: Ingrese un correo electrónico válido.');
+    if (!regexEmail.test(email)) {
+      alert('Por favor, ingrese un correo válido.');
       return;
     }
 
     if (email === 'admin@alke.com' && pass === '123456') {
       window.location.href = 'menu.html';
     } else {
-      alert('Credenciales incorrectas. (admin@alke.com / 123456)');
+      alert('Credenciales incorrectas (admin@alke.com / 123456)');
     }
   });
 
-  // ==========================================
-  // 4. LÓGICA DE DEPÓSITO
-  // ==========================================
-
+  // --- 4. DEPÓSITO ---
   $('#depositForm').on('submit', function (e) {
     e.preventDefault();
     let monto = parseFloat($('#amount').val());
     if (monto > 0) {
       saldo += monto;
-      registrarMovimiento('Depósito de Fondos', monto, 'ingreso');
-      alert('Depósito exitoso');
+      registrarMovimiento('Depósito recibido', monto, 'ingreso');
+      alert('Dinero cargado con éxito');
       window.location.href = 'menu.html';
     }
   });
 
-  // ==========================================
-  // 5. LÓGICA DE SENDMONEY (CONTACTOS)
-  // ==========================================
-
-  // A. Agregar nuevo contacto
+  // --- 5. SEND MONEY (Contactos con Nombre, Tel, CBU) ---
   $('#btnGuardarContacto').on('click', function () {
     const nombre = $('#newName').val();
-    if (nombre.trim() !== '') {
-      const nuevo = {
-        nombre: nombre,
+    const tel = $('#newPhone').val();
+    const cbu = $('#newCBU').val();
+
+    if (nombre && cbu) {
+      contactos.push({
+        nombre,
+        telefono: tel,
+        cbu,
         foto: `https://i.pravatar.cc/150?u=${Math.random()}`,
-      };
-      contactos.push(nuevo);
+      });
       localStorage.setItem('alke_contactos', JSON.stringify(contactos));
       alert('Contacto guardado');
-      $('#newName').val('');
-      $('.collapse').collapse('hide'); // Cerrar formulario de contacto
+      $('#newName, #newPhone, #newCBU').val('');
+      $('.collapse').collapse('hide');
+    } else {
+      alert('Nombre y CBU son obligatorios');
     }
   });
 
-  // B. Buscador de contactos con jQuery (Lección 6)
   $('#contactSearch').on('keyup', function () {
-    let busqueda = $(this).val().toLowerCase();
-    let lista = $('#contactResults').empty();
-
-    if (busqueda.length > 0) {
-      let filtrados = contactos.filter((c) => c.nombre.toLowerCase().includes(busqueda));
-      filtrados.forEach((c) => {
-        lista.append(`
-                    <li class="list-group-item bg-dark text-white d-flex align-items-center contact-item border-secondary" style="cursor:pointer">
-                        <img src="${c.foto}" class="rounded-circle mr-3" width="35" height="35">
-                        <span>${c.nombre}</span>
-                    </li>
-                `);
-      });
+    let b = $(this).val().toLowerCase();
+    let l = $('#contactResults').empty();
+    if (b.length > 0) {
+      contactos
+        .filter((c) => c.nombre.toLowerCase().includes(b))
+        .forEach((c) => {
+          l.append(`
+                    <li class="list-group-item bg-dark text-white d-flex align-items-center contact-item border-secondary">
+                        <img src="${c.foto}" class="rounded-circle mr-3" width="40">
+                        <div><strong>${c.nombre}</strong><br><small class="text-muted">CBU: ${c.cbu}</small></div>
+                    </li>`);
+        });
     }
   });
 
-  // C. Seleccionar contacto de la lista
   $(document).on('click', '.contact-item', function () {
-    let nombre = $(this).find('span').text();
-    $('#contactSearch').val(nombre);
+    $('#contactSearch').val($(this).find('strong').text());
     $('#contactResults').empty();
   });
 
-  // D. Procesar transferencia
   $('#sendMoneyForm').on('submit', function (e) {
     e.preventDefault();
-    let monto = parseFloat($('#sendAmount').val());
-    let destinatario = $('#contactSearch').val();
-
-    if (monto > 0 && monto <= saldo) {
-      saldo -= monto;
-      registrarMovimiento(`Envío a ${destinatario}`, monto, 'egreso');
-      alert('Transferencia completada');
+    let m = parseFloat($('#sendAmount').val());
+    let c = $('#contactSearch').val();
+    if (m > 0 && m <= saldo) {
+      saldo -= m;
+      registrarMovimiento(`Envío a ${c}`, m, 'egreso');
+      alert('Transferencia realizada');
       window.location.href = 'menu.html';
     } else {
-      alert('Error: Saldo insuficiente.');
+      alert('Fondos insuficientes');
     }
   });
 
-  // ==========================================
-  // 6. RENDERIZAR HISTORIAL (PANTALLA TRANSACCIONES)
-  // ==========================================
-
-  const renderizarHistorial = () => {
-    const tabla = $('#transactionTableBody');
-    if (tabla.length) {
-      tabla.empty();
-      historial.forEach((t) => {
-        const claseMonto = t.tipo === 'ingreso' ? 'text-success' : 'text-danger';
-        const signo = t.tipo === 'ingreso' ? '+' : '-';
-        tabla.append(`
-                    <tr class="border-bottom border-secondary">
-                        <td>${t.fecha}</td>
-                        <td>${t.desc}</td>
-                        <td class="text-right ${claseMonto}">${signo} $${t.monto.toLocaleString(
-          'es-CL'
-        )}</td>
-                    </tr>
-                `);
+  function renderizarTabla() {
+    let t = $('#transactionTableBody');
+    if (t.length) {
+      t.empty();
+      historial.forEach((h) => {
+        t.append(`<tr class="border-bottom border-secondary">
+                    <td>${h.fecha}</td><td>${h.desc}</td>
+                    <td class="text-right ${h.tipo === 'ingreso' ? 'text-success' : 'text-danger'}">
+                    ${h.tipo === 'ingreso' ? '+' : '-'} $${h.monto.toLocaleString()}</td></tr>`);
       });
     }
-  };
-
-  // Inicializar vistas al cargar
-  actualizarVistaSaldo();
-  renderizarHistorial();
+  }
+  actualizarInterfaz();
 });
